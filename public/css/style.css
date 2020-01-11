@@ -4,6 +4,9 @@ html, body {
   padding: 0;
 }
 
+.container {
+  margin-top: 5%;
+}
 .save-note {
   display: none;
 }
