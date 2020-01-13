@@ -4,6 +4,10 @@ html, body {
   padding: 0;
 }
 
+.words{
+  margin-left: 20%;
+  text-align: center;
+}
 .container {
   margin-top: 5%;
 }
@@ -14,8 +18,12 @@ html, body {
 .icons i {
   margin-left: 15px;
   margin-right: 15px;
-  font-size: 1.5rem;
+  font-size: 30pt;
   cursor: pointer;
+}
+
+i {
+  font-size: 30pt;
 }
 
 .note-textarea, .note-title {
@@ -27,13 +35,13 @@ html, body {
 
 .note-textarea {
   resize: none;
-  height: calc(100% - 63px);
-  padding-top: 15px;
+  height: calc(100% - 15px);
+  padding-top: 13pt;
 }
 
 .note-title {
   height: 50px;
-  margin-top: 13px;
+  margin-top: 13pt;
   font-size: 3rem;
 }
 
@@ -70,4 +78,7 @@ html, body {
   border-right: none;
   padding: 20px;
   cursor: pointer;
+}
+h1 {
+  color: white;
 }

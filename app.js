@@ -1,56 +1,53 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const fs = require("fs");
+const util = require("util");
+const readFromFile = util.promisify(fs.readFile);
+const writeToFile = util.promisify(fs.writeFile);
+//this sets up the port 
 const PORT = process.env.PORT || 3000;
-
+//calls to use express
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
+//this calls the db.json file
 var notesArr = require("./db.json");
 console.log(notesArr)
-
+//pulls up html when you type "/"
 app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname, "/public/index.html"));
 })
-
+//pulls up notes page when you type "/notes"
 app.get('/notes',(req,res)=>{
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 })
-
-//Should read the `db.json` file and return all saved notes as JSON.
+//retrieve notes from json
 app.get('/api/notes',(req,res)=>{
-    //table data route
+    var notesArr = JSON.parse(fs.readFileSync("./db.json", "utf8"));
     res.json(notesArr);
 })
-
-//Should recieve a new note to save on the request body, add it to the `db.json` file, and then return the new note to the client.
+//receives a new note to save on the post request body, add the note to the `db.json` file, and then return the new note to the client.
 app.post('/api/notes',(req,res)=>{
-    //recieve data object, check if space in restuarnt, push to appropriate array
     const newNote = req.body;
-    if(notesArr.length<5){
+    if(notesArr.length<50){
         notesArr.push(newNote);
+        writeToFile("./db.json", JSON.stringify(notesArr));
         res.send("newNote");
     } else {
         res.send("error");
     }
 })
 
-//Should recieve a query paramter containing the id of a note to delete. This means you'll need to find a way to give each note a unique `id` when it's saved. In order to delete a note, you'll need to read all notes from the `db.json` file, remove the note with the given `id` property, and then rewrite the notes to the `db.json` file.
-// app.DELETE('/api/notes/:id',(req,res)=>{
-//     //recieve data object, check if space in restuarnt, push to appropriate array
-//     const customer = req.body;
-//     if(tablesArr.length<5){
-//         tablesArr.push(customer);
-//         res.send("reserved");
-//     } else {
-//         waitlistArr.push(customer);
-//         res.send("waitlist");
-//     }
-// })
-
-app.listen(PORT,function(){
-    console.log('server listening!');
+app.delete('/api/notes/:id',(req,res)=>{
+    console.log(req.id)
+        notesArr.splice(req.id,1);
+        writeToFile("./db.json", JSON.stringify(notesArr));
+        res.send("deleteNote");
 })
 
-//The application should have a `db.json` file on the backend that will be used to store and retrieve notes using the `fs` module.
+app.listen(PORT,function(){
+    console.log('server ' + PORT + ' is listening!');
+})
+
